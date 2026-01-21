@@ -1,13 +1,13 @@
-TR-Data-Soph — plotting & data utilities (moi/)
+TR-Data-Soph — plotting & data utilities
 =================================================
 
 Summary
 -------
-This folder contains data-cleaning and plotting scripts used to explore a tribology dataset (wear, friction, DLC types and properties). Scripts live in the top-level `moi/` folder and a set of plotting helpers are under `moi/make_figures/`.
+This folder contains data-cleaning and plotting scripts used to explore a tribology dataset (wear, friction, DLC types and properties). Scripts live in the top-level `DLC-Coating-Performance-Prediction/` folder and a set of plotting helpers are under `DLC-Coating-Performance-Prediction/make_figures/`.
 
 Goals
 -----
-- Provide reproducible plotting scripts that read CSVs from `moi/data/` and save figures into `moi/make_figures/figures/`.
+- Provide reproducible plotting scripts that read CSVs from `DLC-Coating-Performance-Prediction/data/` and save figures into `DLC-Coating-Performance-Prediction/make_figures/figures/`.
 - Keep the CSV schema stable: do not rename CSV headers without a coordinated change across scripts.
 - Make scripts consistent: English docstrings, snake_case variables, consistent colormaps (viridis) and robust handling of missing data.
 
@@ -22,7 +22,7 @@ pip install --upgrade pip
 pip install pandas numpy matplotlib scipy seaborn ternary
 ```
 
-2. Run a single plotting script from the `moi/` working directory. For example, to create the friction/wear per-input figures:
+2. Run a single plotting script from the `DLC-Coating-Performance-Prediction/` working directory. For example, to create the friction/wear per-input figures:
 
 ```bash
 python3 make_figures/Fric_wear_input.py
@@ -32,7 +32,7 @@ python3 make_figures/Fric_wear_input.py
 
 Data format
 -----------
-- Input CSVs are in `moi/data/` (many scripts expect `data/cleaned_dataset.csv`).
+- Input CSVs are in `DLC-Coating-Performance-Prediction/data/` (many scripts expect `data/cleaned_dataset.csv`).
 - Reader options used: `sep=';'`, `decimal=','`, `encoding='utf-8'` — keep that format when updating raw CSV files.
 
 What I standardized
