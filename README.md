@@ -1,49 +1,115 @@
-TR-Data-Soph — plotting & data utilities
-=================================================
+# DLC Coating Performance Prediction
 
-Summary
--------
-This folder contains data-cleaning and plotting scripts used to explore a tribology dataset (wear, friction, DLC types and properties). Scripts live in the top-level `DLC-Coating-Performance-Prediction/` folder and a set of plotting helpers are under `DLC-Coating-Performance-Prediction/make_figures/`.
+**Short description**
 
-Goals
------
-- Provide reproducible plotting scripts that read CSVs from `DLC-Coating-Performance-Prediction/data/` and save figures into `DLC-Coating-Performance-Prediction/make_figures/figures/`.
-- Keep the CSV schema stable: do not rename CSV headers without a coordinated change across scripts.
-- Make scripts consistent: English docstrings, snake_case variables, consistent colormaps (viridis) and robust handling of missing data.
+This repository contains data processing, analysis, and machine learning models for *predicting the performance of Diamond-Like Carbon (DLC) coatings*, notably **friction (CoF)** and **wear**, based on experimental input parameters.
 
-Quick start
------------
-1. Create a Python virtual environment and install minimal dependencies:
+---
+
+## Project goals
+
+- Explore and visualize relationships between inputs and coating performance
+- Build a reproducible data pipeline to process raw experimental measurements
+- Train and compare machine learning models (Random Forest, XGBoost, etc.) to predict CoF and wear
+- Provide reproducible figures and metrics for comparative evaluation
+
+---
+
+## Repository structure
+
+- `data/` — Raw and processed data plus scripts for selection and reduction
+  - `raw.csv` — Original raw dataset
+  - `processed/processing.py` — Data cleaning & preprocessing
+  - `selected/selection.py` — Selection and scenario datasets
+
+- `data_analisis/` — Scripts and output for plotting and exploratory figures
+  - `figures/` — Generated figures
+  - `make_figures/` — Scripts to generate plots (composition, ternary diagrams, feature presence, etc.)
+    - `compo_dataset.py` - generates a bar with the data repartition (also with abscence) of each feature
+    - `Data_quantity.py`- generates a graph of number of point in function the value for each feature
+    - `Fric_wear_input.py` - generates two graphs : CoF in function of input and Wear in fonction of input for some each feature
+    - `input1_input2_compo.py` - mean value of input1 and input2 in function of each element
+    - `input1_input2_density.py` - input1 in function of input2 with data quantity in color
+    - `input1_input2_family.py`- input1 in function of input2 with DLC group in color
+    - `Ternary_diagram.py` - some ternary diagrams
+    - `presence_per_feature.py` - data quantity for each feature
+
+- `pred_comparison/` — Code to train and compare multiple models
+  - `main.py` — Orchestrates model training and evaluation
+  - `results/` — Contains `figures/` and `metrics/` per scenario
+  - `src/` — Utilities, preprocessing, models and helpers
+
+- `pred_extra_trees/` — Extra Trees experiments (best-performing models; primary focus)  
+  - `main.py` — run Extra Trees experiments and evaluation
+  - `results/CoF/`, — CoF prediction results
+  - `results/Wear/` — Wear prediction results
+
+- `pred_rd_forest/` — Random Forest experiments (alternative ensemble)
+  - `main.py` — run model optimisation (with optuna) and evaluation
+  - `results/CoF/` — CoF prediction results (per scenario)
+  - `results/Wear/` — Wear prediction results (per scenario)
+
+- `pred_xgboost/` — XGBoost experiments (explored but later deprioritized because Random Forest produced better results)
+  - `main.py` — run model optimisation (with optuna) and evaluation
+  - `results_RMSE/CoF/` — CoF prediction results
+  - `results_RMSE/Wear/` — Wear prediction results
+  
+  **Note:** **_Extra Trees (`pred_rd_forest/`) yielded the best performance in our evaluations; XGBoost experiments were kept for comparison but are no longer the focus._**
+
+- `presentation.pdf` - Entire presentation of the project.
+
+
+---
+
+## Quick start
+
+> **Note:** The repository assumes a Python 3.8+ environment. Adjust commands to your chosen environment manager (venv/conda).
+
+1. Create and activate a virtual environment
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
-pip install pandas numpy matplotlib scipy seaborn ternary
+python -m venv .venv
+source .venv/bin/activate  # macOS / Linux
 ```
 
-2. Run a single plotting script from the `DLC-Coating-Performance-Prediction/` working directory. For example, to create the friction/wear per-input figures:
+2. Install required packages
 
 ```bash
-python3 make_figures/Fric_wear_input.py
+pip install pandas numpy scikit-learn xgboost matplotlib seaborn jupyter
 ```
 
-3. Output images will be saved under `make_figures/figures/` in subfolders. Check console output for generated filenames.
+3. Process data
 
-Data format
------------
-- Input CSVs are in `DLC-Coating-Performance-Prediction/data/` (many scripts expect `data/cleaned_dataset.csv`).
-- Reader options used: `sep=';'`, `decimal=','`, `encoding='utf-8'` — keep that format when updating raw CSV files.
+```bash
+python data/01-processed/processing.py
+python data/02-selected/selection.py
+python data/03-reduced/reduction.py
+```
 
-What I standardized
--------------------
-- Module docstrings in English and consistent naming (snake_case: `col_name`, `is_continuous`, `is_log`).
-- Perceptually-uniform colormaps (`viridis`) for continuous color encodings.
-- Correct use of `matplotlib.cm.ScalarMappable` for colorbars (set_array with the data array).
-- Safer handling of NaNs and empty bins when computing statistics and plotting.
+4. Generate figures for data analisis of raw.csv
 
-Files of interest
------------------
-- `data/cleaned_dataset.csv` — primary dataset used by plotting scripts.
-- `make_figures/` — plotting scripts and their output directory `make_figures/figures/`.
+```bash
+python data_analisis/make_figures/Data_quantity.py
+# or any other scripts in data_analisis/make_figures/
+```
+
+5. Train & compare models
+
+```bash
+python pred_comparison/main.py
+# or run model-specific scripts in `pred_rd_forest/`, `pred_extra_trees/`, or `pred_xgboost/`
+```
+
+6. Inspect results
+
+- `pred_comparison/results/metrics/` — CSV files for scenario metrics
+- `pred_comparison/results/figures/` — Plots comparing predictions and ground truth
+
+
+---
+
+## Conclusion
+
+- Extra Trees has proven to be the most effecient prediction method. 
+- Scenraio 2 (inputs = Sliding velocity - Humidity - Ball hardness - Load - Temperature - Sp2/Sp3 - DLC groupe - Film hardness - Doped - H) has the best results 
 
