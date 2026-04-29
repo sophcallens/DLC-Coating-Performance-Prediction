@@ -56,7 +56,8 @@ This repository contains data processing, analysis, and machine learning models 
   
   **Note:** **_Extra Trees (`pred_rd_forest/`) yielded the best performance in our evaluations; XGBoost experiments were kept for comparison but are no longer the focus._**
 
-- `presentation.pdf` - Entire presentation of the project.
+- `TR SOPH.IA DATA Presentation - Sophie CALLENS.pdf` - Oral presentation of the project.
+- `TR SOPH.IA DATA Presentation - Sophie CALLENS.pdf` - Overall report on the project.
 
 
 ---
